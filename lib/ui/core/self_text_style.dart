@@ -16,4 +16,9 @@ class SelfTextStyle{
     fontWeight: FontWeight.w400,
     fontSize: 20,
   );
+  static const TextStyle sendCodeRetryTextStyle = TextStyle(
+    fontWeight: FontWeight.w600,
+    fontSize: 16,
+    color: SelfColors.black
+  );
 }

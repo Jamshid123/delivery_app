@@ -29,7 +29,7 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/png/logo.png
+  image: assets/png/logo_splash_screen.png
 
 flutter:
   uses-material-design: true
