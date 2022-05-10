@@ -9,5 +9,7 @@ class SelfColors {
   static const Color whiteLight = Color(0xFFF5F5FA);
   static const Color blackSettingPageText = Color(0xFF181D27);
   static const Color blackChooseLang = Color(0xFF201A25);
+  static const Color darkWhite = Color(0xFFF3F3F7);
+  static const Color lightGreen = Color(0xFF6AD367);
 
 }

@@ -1,6 +1,6 @@
 import 'package:delivery_app/ui/auth_pages/otp_verify_page.dart';
 import 'package:delivery_app/ui/auth_pages/phone_number_page.dart';
-import 'package:delivery_app/ui/settings_page.dart';
+import 'package:delivery_app/ui/settings_page/settings_page.dart';
 import 'package:flutter/material.dart';
 
 
@@ -9,8 +9,9 @@ class AppWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-      home: SettingsPage(),
+    return  const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: PhoneNumber(),
     );
   }
 }

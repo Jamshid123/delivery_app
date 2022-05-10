@@ -1,6 +1,7 @@
 import 'package:delivery_app/ui/auth_pages/widget/button.dart';
 import 'package:delivery_app/ui/core/self_color.dart';
 import 'package:delivery_app/ui/core/self_text_style.dart';
+import 'package:delivery_app/ui/settings_page/settings_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -98,6 +99,9 @@ class _OtpVerificationState extends State<OtpVerification> {
     return PinCodeTextField(
       keyboardType: TextInputType.number,
       appContext: context,
+      showCursor: true,
+      cursorColor: SelfColors.black,
+      cursorHeight: 25,
       pinTheme: PinTheme(
         fieldHeight: 50,
         fieldWidth: 50,
@@ -139,7 +143,9 @@ class _OtpVerificationState extends State<OtpVerification> {
           verificationId: _verificationId, smsCode: code!);
 
       await _auth.signInWithCredential(credential).then((value) {
-        print('GOTOVO!');
+        Navigator.push(context, MaterialPageRoute(builder: (context){
+          return SettingsPage();
+        }));
       });
     }
   }

@@ -36,4 +36,9 @@ class SelfTextStyle{
       fontSize: 24,
       color: SelfColors.blackChooseLang
   );
+  static const TextStyle languageTextStyle = TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 14,
+      color: SelfColors.blackSettingPageText
+  );
 }
