@@ -21,4 +21,19 @@ class SelfTextStyle{
     fontSize: 16,
     color: SelfColors.black
   );
+  static const TextStyle appBarHeadingTextStyle = TextStyle(
+      fontWeight: FontWeight.w700,
+      fontSize: 20,
+      color: SelfColors.black
+  );
+  static const TextStyle settingsButtonTextStyle = TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 16,
+      color: SelfColors.blackSettingPageText
+  );
+  static const TextStyle chooseLangTextStyle = TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 24,
+      color: SelfColors.blackChooseLang
+  );
 }

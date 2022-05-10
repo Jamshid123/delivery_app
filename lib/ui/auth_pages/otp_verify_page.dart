@@ -3,6 +3,7 @@ import 'package:delivery_app/ui/core/self_color.dart';
 import 'package:delivery_app/ui/core/self_text_style.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -15,8 +16,8 @@ class OtpVerification extends StatefulWidget {
 }
 
 class _OtpVerificationState extends State<OtpVerification> {
-  var  phoneNumber;
-  var  _verificationId;
+  final String phoneNumber;
+  var _verificationId;
   // var _otpController = TextEditingController();
   var currentText;
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -28,13 +29,27 @@ class _OtpVerificationState extends State<OtpVerification> {
     _verifyPhoneNumber();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.chevron_left, color: Colors.black,),
+          ),
+          centerTitle: true,
+          title: Text(
+            'Верификация',
+            style: GoogleFonts.mulish(
+                textStyle: SelfTextStyle.appBarHeadingTextStyle),
+          ),
+        ),
+        body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -63,7 +78,9 @@ class _OtpVerificationState extends State<OtpVerification> {
                   title: 'Войти'),
               const SizedBox(height: 15),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  _verifyPhoneNumber();
+                },
                 child: Text(
                   'Отправить код повторно',
                   style: GoogleFonts.mulish(
@@ -82,10 +99,14 @@ class _OtpVerificationState extends State<OtpVerification> {
       keyboardType: TextInputType.number,
       appContext: context,
       pinTheme: PinTheme(
-        fieldHeight: 60,
-        fieldWidth: 60,
+        fieldHeight: 50,
+        fieldWidth: 50,
         activeColor: SelfColors.green,
         inactiveColor: SelfColors.green,
+        activeFillColor: SelfColors.green,
+        inactiveFillColor: SelfColors.green,
+        disabledColor: SelfColors.green,
+        selectedColor: SelfColors.green,
         shape: PinCodeFieldShape.box,
         borderRadius: const BorderRadius.all(Radius.circular(15)),
       ),
@@ -97,6 +118,7 @@ class _OtpVerificationState extends State<OtpVerification> {
       },
     );
   }
+
   Future _verifyPhoneNumber() async {
     _auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
@@ -107,6 +129,7 @@ class _OtpVerificationState extends State<OtpVerification> {
             _verificationId = verificationId;
           });
         },
+        timeout: const Duration(seconds: 60),
         codeAutoRetrievalTimeout: (verificationId) async {});
   }
 
