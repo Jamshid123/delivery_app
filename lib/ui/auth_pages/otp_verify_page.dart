@@ -1,6 +1,7 @@
 import 'package:delivery_app/ui/auth_pages/widget/button.dart';
 import 'package:delivery_app/ui/core/self_color.dart';
 import 'package:delivery_app/ui/core/self_text_style.dart';
+import 'package:delivery_app/ui/screens/menu_page.dart';
 import 'package:delivery_app/ui/settings_page/settings_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,10 @@ class _OtpVerificationState extends State<OtpVerification> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: const Icon(Icons.chevron_left, color: Colors.black,),
+            icon: const Icon(
+              Icons.chevron_left,
+              color: Colors.black,
+            ),
           ),
           centerTitle: true,
           title: Text(
@@ -143,8 +147,8 @@ class _OtpVerificationState extends State<OtpVerification> {
           verificationId: _verificationId, smsCode: code!);
 
       await _auth.signInWithCredential(credential).then((value) {
-        Navigator.push(context, MaterialPageRoute(builder: (context){
-          return SettingsPage();
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return const MenuPage();
         }));
       });
     }
