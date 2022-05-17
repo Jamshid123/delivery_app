@@ -1,11 +1,13 @@
 import 'package:delivery_app/ui/core/self_color.dart';
+import 'package:delivery_app/ui/screens/cart_screen.dart';
 import 'package:delivery_app/ui/screens/menu_page.dart';
 import 'package:delivery_app/ui/screens/order_page.dart';
+import 'package:delivery_app/ui/screens/widgets/cart_products.dart';
 import 'package:delivery_app/ui/settings_page/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
-  MainPage({
+  const MainPage({
     Key? key,
   }) : super(key: key);
 
@@ -30,9 +32,9 @@ class _MainPageState extends State<MainPage> {
   // }
 
   int _selectedIndex = 0;
-  static const List<Widget> _pages = <Widget>[
+  static List<Widget> _pages = <Widget>[
     MenuPage(),
-    OrderPage(),
+    CartScreen(),
     SettingsPage()
   ];
 
