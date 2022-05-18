@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:delivery_app/ui/core/self_color.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-
 
 class MapSample extends StatefulWidget {
   @override
@@ -11,39 +11,124 @@ class MapSample extends StatefulWidget {
 }
 
 class MapSampleState extends State<MapSample> {
-  Completer<GoogleMapController> _controller = Completer();
+  @override
+  void initState() {
+    _getCurrentLocation();
+    super.initState();
+  }
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+  late GoogleMapController mapController;
+  late final Position _currentPosition;
+  void _getCurrentLocation() async {
+    await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    ).then((Position position) {
+      setState(() {
+        _currentPosition = position;
+        mapController.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(position.latitude, position.longitude),
+              zoom: 18,
+            ),
+          ),
+        );
+      });
+    }).catchError((e) {
+      print(e);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      body: GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('To the lake!'),
-        icon: Icon(Icons.directions_boat),
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    return SafeArea(
+      child: Container(
+        height: height,
+        width: width,
+        child: Scaffold(
+          body: Stack(
+            children: [
+              GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(41.483264, 69.583763),
+                  zoom: 15,
+                ),
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                mapType: MapType.normal,
+                zoomGesturesEnabled: true,
+                zoomControlsEnabled: false,
+                onMapCreated: (GoogleMapController controller) {
+                  mapController = controller;
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ZoomButton(
+                      iconData: Icons.add,
+                      onPressed: () {
+                        mapController.animateCamera(CameraUpdate.zoomIn());
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    ZoomButton(
+                      iconData: Icons.remove,
+                      onPressed: () {
+                        mapController.animateCamera(CameraUpdate.zoomOut());
+                      },
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        mapController.animateCamera(
+                          CameraUpdate.newCameraPosition(
+                            CameraPosition(
+                                target: LatLng(
+                                  _currentPosition.latitude,
+                                  _currentPosition.longitude,
+                                ),
+                                zoom: 18),
+                          ),
+                        );
+                      },
+                      child: Icon(Icons.my_location),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
+}
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+class ZoomButton extends StatelessWidget {
+  ZoomButton({
+    required this.iconData,
+    required this.onPressed,
+  });
+  final VoidCallback onPressed;
+  final IconData iconData;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        height: 40,
+        width: 40,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40), color: Colors.blue),
+        child: Icon(
+          iconData,
+          color: SelfColors.white,
+        ),
+      ),
+    );
   }
 }
