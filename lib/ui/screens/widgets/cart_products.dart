@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-
 import '../../../controllers/cart_controller.dart';
 import 'package:delivery_app/models/product_model.dart';
-
 import '../../core/self_color.dart';
 
 class CartProducts extends StatelessWidget {

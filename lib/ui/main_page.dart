@@ -1,9 +1,7 @@
 import 'package:delivery_app/ui/core/self_color.dart';
-import 'package:delivery_app/ui/screens/cart_screen.dart';
+import 'package:delivery_app/ui/screens/cart_page.dart';
 import 'package:delivery_app/ui/screens/menu_page.dart';
-import 'package:delivery_app/ui/screens/order_page.dart';
-import 'package:delivery_app/ui/screens/widgets/cart_products.dart';
-import 'package:delivery_app/ui/settings_page/settings_page.dart';
+import 'package:delivery_app/ui/screens/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -32,10 +30,10 @@ class _MainPageState extends State<MainPage> {
   // }
 
   int _selectedIndex = 0;
-  static List<Widget> _pages = <Widget>[
-    MenuPage(),
-    CartScreen(),
-    SettingsPage()
+  final List<Widget> _pages = [
+    const MenuPage(),
+    const CartScreen(),
+    const SettingsPage()
   ];
 
   @override
@@ -43,38 +41,37 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       extendBody: true,
       body: Center(
-        child: _pages.elementAt(_selectedIndex),
+        child: _pages[_selectedIndex],
       ),
       bottomNavigationBar: Container(
         height: 86,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.only(
-              topRight: Radius.circular(25),
-              topLeft: Radius.circular(25),
-              bottomRight: Radius.circular(25),
-              bottomLeft: Radius.circular(25)),
+            topRight: Radius.circular(25),
+            topLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
+            bottomLeft: Radius.circular(25),
+          ),
           boxShadow: [
             BoxShadow(color: SelfColors.whiteLight, blurRadius: 10),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25),
-              topRight: Radius.circular(25),
-              bottomRight: Radius.circular(25),
-              bottomLeft: Radius.circular(25)),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+            bottomRight: Radius.circular(25),
+            bottomLeft: Radius.circular(25),
+          ),
           child: BottomNavigationBar(
-            // type: BottomNavigationBarType.fixed,
-
-            currentIndex: this._selectedIndex,
-
+            currentIndex: _selectedIndex,
             backgroundColor: SelfColors.whiteLight,
             selectedItemColor: SelfColors.mainGreen,
             selectedFontSize: 15,
             iconSize: 24,
             onTap: _onItemTapped,
-            items: [
+            items: const [
               BottomNavigationBarItem(
                   icon: Icon(Icons.food_bank_outlined), label: ''),
               BottomNavigationBarItem(
@@ -84,31 +81,34 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
       ),
-      // body: Center(
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: <Widget>[
-      //       Text(
-      //         'You have pushed the button this many times:',
-      //       ),
-      //       Text(
-      //         '$_counter',
-      //         style: Theme.of(context).textTheme.headline4,
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 }
+
+/*
+// body: Center(
+//   child: Column(
+//     mainAxisAlignment: MainAxisAlignment.center,
+//     children: <Widget>[
+//       Text(
+//         'You have pushed the button this many times:',
+//       ),
+//       Text(
+//         '$_counter',
+//         style: Theme.of(context).textTheme.headline4,
+//       ),
+//     ],
+//   ),
+// ),
+// floatingActionButton: FloatingActionButton(
+//   onPressed: _incrementCounter,
+//   tooltip: 'Increment',
+//   child: Icon(Icons.add),
+// ), // This trailing comma makes auto-formatting nicer for build methods
+
+ */

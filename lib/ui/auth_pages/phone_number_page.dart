@@ -16,39 +16,16 @@ class PhoneNumber extends StatefulWidget {
 
 class _PhoneNumberState extends State<PhoneNumber> {
   var maskFormatter = MaskTextInputFormatter(
-      mask: '(##) ###-##-##',
+      mask: ' (##) ###-##-##',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
-  var snackBar = SnackBar(
-    backgroundColor: SelfColors.white,
-    duration: const Duration(milliseconds: 700),
-    content: Text(
-      'Введите номер телефона!',
-      style: GoogleFonts.mulish(
-        textStyle: const TextStyle(
-            fontSize: 20, fontWeight: FontWeight.w400, color: SelfColors.red),
-      ),
-    ),
-  );
-  var snackBarErrorLength = SnackBar(
-      backgroundColor: SelfColors.white,
-      duration: const Duration(milliseconds: 700),
-      content: Text(
-        'Номер телефона введен неверно!',
-        style: GoogleFonts.mulish(
-            textStyle: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w400,
-                color: SelfColors.red)),
-      ));
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 50),
+        body: Center(
+          child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -69,7 +46,7 @@ class _PhoneNumberState extends State<PhoneNumber> {
                     Container(
                       height: 50,
                       width: double.infinity,
-                      margin: const EdgeInsets.only(left: 23, right: 23),
+                      margin: const EdgeInsets.symmetric(horizontal: 23),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(40),
                         border: Border.all(color: SelfColors.green),
@@ -79,21 +56,19 @@ class _PhoneNumberState extends State<PhoneNumber> {
                         keyboardType: TextInputType.number,
                         style: GoogleFonts.nunito(
                           textStyle: const TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20,
-                            color: SelfColors.black
-                          ),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20,
+                              color: SelfColors.black),
                         ),
                         inputFormatters: [maskFormatter],
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          prefix: Text('+998', style: GoogleFonts.nunito(
-                            textStyle: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 20,
-                              color: SelfColors.black
+                          prefix: Text(
+                            '+998',
+                            style: GoogleFonts.nunito(
+                              textStyle: SelfTextStyle.phoneNumberTextStyle,
                             ),
-                          ),),
+                          ),
                           contentPadding: const EdgeInsets.only(left: 40),
                         ),
                       ),
@@ -104,26 +79,80 @@ class _PhoneNumberState extends State<PhoneNumber> {
                 Button(
                   title: 'Получить код',
                   onPressed: () {
-                    if (maskFormatter.getUnmaskedText().isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    } else if (maskFormatter.getUnmaskedText().length < 9) {
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(snackBarErrorLength);
-                    } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return OtpVerification(
-                              phoneNumber: "+998" + maskFormatter.getUnmaskedText());
-                        }),
-                      );
-                    }
+                   validator();
                   },
                 ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+  void validator(){
+    if (maskFormatter.getUnmaskedText().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(milliseconds: 800),
+        content: CustomContent(
+          errorText:
+          'Поле ввода пустое. Введите номер телефона',
+        ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ));
+    } else if (maskFormatter.getUnmaskedText().length < 9) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(milliseconds: 800),
+        content: CustomContent(
+          errorText: 'Введен неверный номер телефона',
+        ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ));
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) {
+          return OtpVerification(
+              phoneNumber:
+              "+998" + maskFormatter.getUnmaskedText());
+        }),
+      );
+    }
+  }
+}
+
+class CustomContent extends StatelessWidget {
+  final String errorText;
+  CustomContent({required this.errorText});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      height: 90,
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+        color: Colors.redAccent,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Упс! Что-то пошло не так',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            errorText,
+            maxLines: 2,
+            style: GoogleFonts.mulish(textStyle: SelfTextStyle.errorTextStyle),
+          ),
+        ],
       ),
     );
   }

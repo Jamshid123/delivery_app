@@ -1,5 +1,6 @@
 import 'package:delivery_app/ui/core/self_color.dart';
 import 'package:delivery_app/ui/core/self_text_style.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -17,6 +18,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   LangType? _langType;
+
   @override
   Widget build(BuildContext context) {
     final _screenHeight = MediaQuery.of(context).size.height;
