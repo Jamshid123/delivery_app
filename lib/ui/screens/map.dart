@@ -1,9 +1,9 @@
 import 'dart:async';
-
 import 'package:delivery_app/ui/core/self_color.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geocoding/geocoding.dart';
 
 class MapSample extends StatefulWidget {
   @override
@@ -18,33 +18,19 @@ class MapSampleState extends State<MapSample> {
   }
 
   late GoogleMapController mapController;
+
   late final Position _currentPosition;
-  void _getCurrentLocation() async {
-    await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    ).then((Position position) {
-      setState(() {
-        _currentPosition = position;
-        mapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              target: LatLng(position.latitude, position.longitude),
-              zoom: 18,
-            ),
-          ),
-        );
-      });
-    }).catchError((e) {
-      print(e);
-    });
-  }
+
+  String _currentAddress = '';
+ final TextEditingController _startAddressController = TextEditingController();
+  Set<Marker> markers = {};
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return SafeArea(
-      child: Container(
+      child: SizedBox(
         height: height,
         width: width,
         child: Scaffold(
@@ -52,7 +38,7 @@ class MapSampleState extends State<MapSample> {
             children: [
               GoogleMap(
                 initialCameraPosition: CameraPosition(
-                  target: LatLng(41.483264, 69.583763),
+                  target: LatLng(0.0,0.0),
                   zoom: 15,
                 ),
                 myLocationEnabled: true,
@@ -63,6 +49,15 @@ class MapSampleState extends State<MapSample> {
                 onMapCreated: (GoogleMapController controller) {
                   mapController = controller;
                 },
+              ),
+              Center(
+                child: SizedBox(
+                  height: 200,
+                  width: 200,
+                  child: TextField(
+                    controller: _startAddressController,
+                  ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 10),
@@ -83,28 +78,83 @@ class MapSampleState extends State<MapSample> {
                       },
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        mapController.animateCamera(
-                          CameraUpdate.newCameraPosition(
-                            CameraPosition(
-                                target: LatLng(
-                                  _currentPosition.latitude,
-                                  _currentPosition.longitude,
-                                ),
-                                zoom: 18),
-                          ),
-                        );
-                      },
-                      child: Icon(Icons.my_location),
-                    ),
+                        onPressed: () {
+                          _getAddress();
+                        },
+                        child: Text('Click'))
                   ],
                 ),
               ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 20, bottom: 30),
+                  child: _myLocationButton(),
+                ),
+              )
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _myLocationButton() {
+    return GestureDetector(
+      onTap: _myLocationAnimateCamera,
+      child: Container(
+        height: 40,
+        width: 40,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40), color: Colors.blue),
+        child: const Icon(
+          Icons.my_location,
+          color: SelfColors.white,
+        ),
+      ),
+    );
+  }
+
+  void _getCurrentLocation() async {
+    await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    ).then((Position position) {
+      setState(() {
+        _currentPosition = position;
+        mapController.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(position.latitude, position.longitude),
+              zoom: 18,
+            ),
+          ),
+        );
+      });
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  void _myLocationAnimateCamera() {
+    mapController.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+            target:
+                LatLng(_currentPosition.latitude, _currentPosition.longitude),
+            zoom: 18),
+      ),
+    );
+  }
+
+  _getAddress() async {
+    List<Placemark> p = await placemarkFromCoordinates(
+        _currentPosition.latitude, _currentPosition.longitude);
+    Placemark placeMark = p[0];
+    setState(() {
+      _currentAddress =
+          "${placeMark.street}, ${placeMark.locality}, ${placeMark.country}";
+      _startAddressController.text = _currentAddress;
+    });
   }
 }
 
