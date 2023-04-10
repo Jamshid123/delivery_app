@@ -19,6 +19,14 @@ dependencies:
   google_fonts: ^2.3.1
   mask_text_input_formatter: ^2.3.0
   pin_code_fields: ^7.4.0
+  flutter_svg: ^1.0.3
+  get: ^4.3.8
+  cloud_firestore: ^3.1.15
+  google_maps_flutter: ^2.1.5
+  geolocator: ^8.2.1
+  flutter_polyline_points: ^1.0.0
+  geocoding: ^2.0.4
+
 
 
 dev_dependencies:
@@ -29,7 +37,7 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/png/logo.png
+  image: assets/png/logo_splash_screen.png
 
 flutter:
   uses-material-design: true
